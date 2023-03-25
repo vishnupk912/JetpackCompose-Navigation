@@ -2,22 +2,22 @@ package com.test.composenavigation
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.test.composenavigation.ui.theme.ComposeNavigationTheme
 
 class MainActivity : ComponentActivity() {
@@ -35,11 +35,12 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun SplashScreen(navController: NavHostController) {
+    val userid=123
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .clickable {
-                navController.navigate("black_screen")
+                navController.navigate("black_screen/$userid")
             },
         color = Color.Blue
     ) {
@@ -49,11 +50,12 @@ fun SplashScreen(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(userId: Int) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.Black
     ) {
+        Log.d("User_id", userId.toString())
     }
 }
 
@@ -65,8 +67,10 @@ fun UserApplication() {
             SplashScreen(navController)
         }
 
-        composable(route = "black_screen") {
-            HomeScreen()
+        composable(route = "black_screen/{user_id}", arguments = listOf(navArgument("user_id") {
+            type = NavType.IntType
+        })) {
+            HomeScreen(it.arguments!!.getInt("user_id"))
         }
     }
 }
