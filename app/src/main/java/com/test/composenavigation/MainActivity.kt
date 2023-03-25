@@ -8,10 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -35,7 +38,7 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun SplashScreen(navController: NavHostController) {
-    val userid=123
+    val userid = 123
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -50,12 +53,15 @@ fun SplashScreen(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeScreen(userId: Int) {
+fun HomeScreen(userId: Int, navController: NavHostController) {
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color.Black
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable {
+                navController.navigateUp()
+            }, color = Color.Black
     ) {
-        Log.d("User_id", userId.toString())
+        Text(text = userId.toString(), fontSize = 20.sp, color = Color.White)
     }
 }
 
@@ -70,7 +76,7 @@ fun UserApplication() {
         composable(route = "black_screen/{user_id}", arguments = listOf(navArgument("user_id") {
             type = NavType.IntType
         })) {
-            HomeScreen(it.arguments!!.getInt("user_id"))
+            HomeScreen(it.arguments!!.getInt("user_id"),navController)
         }
     }
 }
